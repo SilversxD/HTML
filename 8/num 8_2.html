@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>draw</title>
+    <script>
+        function animate(options) {
+
+            var start = performance.now();
+
+            requestAnimationFrame(function animate(time) {
+                // timeFraction от 0 до 1
+                var timeFraction = (time - start) / options.duration;
+                if (timeFraction > 1) timeFraction = 1;
+
+                // текущее состояние анимации
+                var progress = options.timing(timeFraction)
+
+                options.draw(progress);
+
+                if (timeFraction < 1) {
+                    requestAnimationFrame(animate);
+                }
+
+            });
+        }
+    </script>
+</head>
+<body>
+<label>
+<textarea rows="10" cols="30" id="text">
+    Ես նաեւ առանձնաշնորհում եմ ունեցել աջակցելու նյութերը Բրայլի գրատիպով տառադարձելու գործին Եհովայի վկաների՝ Իսպանիայի մասնաճյուղում, որը գտնվում է Մադրիդ քաղաքում։
+</textarea>
+</label>
+<button onclick="animateText(text)" style="display: block">Запустить набор текста</button>
+<script>
+    function animateText(textArea) {
+        let text = textArea.value;
+        let textEnd = text.length;
+        let textStart = 0;
+
+        animate({
+            duration: 7000,
+            timing: bounce,
+            draw: function (progress) {
+                let result = (textEnd - textStart) * progress + textStart;
+                textArea.value = text.substr(0, Math.ceil(result));
+            }
+        });
+    }
+    function bounce(timeFraction) {
+        return timeFraction;
+    }
+</script>
+</body>
+</html>

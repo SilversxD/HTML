@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Анимированный прыгающий мяч</title>
+    <style>
+        #field {
+            width: 200px;
+            height: 400px;
+            border-bottom: 40px solid green;
+            position: relative;
+            padding: 0;
+            background-image: url("https://avatanplus.com/files/resources/original/5b547cfb23f9e164c208350b.jpg");
+        }
+        #ball {
+            width: 70px;
+            position: absolute;
+            cursor: pointer;
+            left: 65px;
+            top: 0;
+            margin-top: 9px;
+        }
+    </style>
+    <script>
+        function animate(options) {
+
+            var start = performance.now();
+
+            requestAnimationFrame(function animate(time) {
+                // timeFraction от 0 до 1
+                var timeFraction = (time - start) / options.duration;
+                if (timeFraction > 1) timeFraction = 1;
+
+                // текущее состояние анимации
+                var progress = options.timing(timeFraction)
+
+                options.draw(progress);
+
+                if (timeFraction < 1) {
+                    requestAnimationFrame(animate);
+                }
+
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="field">
+    <img src="https://pngicon.ru/file/uploads/basketball.png" id="ball">
+</div>
+<script>
+    let ball = document.getElementById('ball');
+    let field = document.getElementById('field');
+    function makeEaseOut(timing) {
+        return function(timeFraction) {
+            return 1 - timing(1 - timeFraction);
+        }
+    }
+
+    function bounce(timeFraction) {
+        for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
+            if (timeFraction >= (7 - 4 * a) / 11) {
+                return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
+            }
+        }
+    }
+
+    ball.onclick = function() {
+        let to = field.clientHeight - ball.clientHeight;
+
+        animate({
+            duration: 2000,
+            timing: makeEaseOut(bounce),
+            draw(progress) {
+                ball.style.top = to * progress + 'px'
+            }
+        });
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bicycle</title>
+    <style>
+        img {
+            width: 80px;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<img src="https://img2.freepng.ru/20180811/bco/kisspng-lamborghini-gallardo-car-2-18-lamborghini-aventado-lamborghini-png-background-image-png-names-5b6e6a6e2696c6.7620082215339628621581.jpg" id="bicycle" onclick="startMoving()">
+<script>
+    function startMoving() {
+        let startTime = Date.now();
+        let timer = setInterval(function () {
+            let timePassed = Date.now() - startTime;
+
+            if (timePassed >= 2000) {
+                clearInterval(timer);
+                return;
+            }
+            moveImage(timePassed);
+        }, 20);
+    }
+    function moveImage(timePassed) {
+        document.getElementById('bicycle').style.left = timePassed / 5 + 'px';
+    }
+</script>
+</body>
+</html>
